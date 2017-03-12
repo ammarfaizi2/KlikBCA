@@ -1,4 +1,8 @@
 <?php
+/**
+* @author Ammar F. <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+* @license RedAngel PHP Concept 2017
+*/
 $_p['value(user_id)'] = ""; // username
 $_p['value(pswd)'] = ""; // password
 $_p['value(Submit)'] = "LOGIN";
