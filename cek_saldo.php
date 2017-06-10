@@ -17,7 +17,7 @@ for ($i=1;$i<count($a);$i++) {
 if (isset($_p['value(user_ip)'])) {
     $op = array(CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>$_p,CURLOPT_REFERER=>"https://m.klikbca.com/login.jsp",);
     $a=curl("https://m.klikbca.com/authentication.do", $op);
-    $op = array(CURLOPT_REFERER=>"https://m.klikbca.com/authentication.do",CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>"Content-Type: application/x-www-form-urlencoded\nContent-Length: 0\n\n");
+    $op = array(CURLOPT_REFERER=>"https://m.klikbca.com/authentication.do",CURLOPT_POST=>true,CURLOPT_HTTPHEADER=>["Content-Type: application/x-www-form-urlencoded\nContent-Length: 0\n\n"]);
     $b=curl("https://m.klikbca.com/accountstmt.do?value(actions)=menu", $op);
     $c=explode("<td align='right'><font size='1' color='#0000a7'><b>", curl("https://m.klikbca.com/balanceinquiry.do", $op));
     if (!isset($c[1])) {
