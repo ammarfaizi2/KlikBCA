@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Ammar F. <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @author Ammar F. <ammarfaizi2@gmail.com>
  */
 $_p['value(user_id)'] = ""; // username
 $_p['value(pswd)'] = ""; // password
@@ -20,9 +20,13 @@ if (isset($_p['value(user_ip)'])) {
     $op = array(CURLOPT_REFERER=>"https://m.klikbca.com/authentication.do",CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>"Content-Type: application/x-www-form-urlencoded\nContent-Length: 0\n\n");
     $b=curl("https://m.klikbca.com/accountstmt.do?value(actions)=menu", $op);
     $c=explode("<td align='right'><font size='1' color='#0000a7'><b>", curl("https://m.klikbca.com/balanceinquiry.do", $op));
-    $c=explode("</td>", $c[1]);
-    $saldo = $c[0];
-    echo "Saldo anda : ".$saldo."\n";
+    if (!isset($c[1])) {
+        echo "Gagal login !\n\n";
+    } else {
+        $c=explode("</td>", $c[1]);
+        $saldo = $c[0];
+        echo "Saldo anda : ".$saldo."\n";
+    }
 } else {
     echo "Gagal menjalankan curl !\n";
 }
