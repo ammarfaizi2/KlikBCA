@@ -1,8 +1,7 @@
 <?php
 /**
-* @author Ammar F. <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
-* @license RedAngel PHP Concept 2017
-*/
+ * @author Ammar F. <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ */
 $_p['value(user_id)'] = ""; // username
 $_p['value(pswd)'] = ""; // password
 $_p['value(Submit)'] = "LOGIN";
@@ -23,9 +22,9 @@ if (isset($_p['value(user_ip)'])) {
     $c=explode("<td align='right'><font size='1' color='#0000a7'><b>", curl("https://m.klikbca.com/balanceinquiry.do", $op));
     $c=explode("</td>", $c[1]);
     $saldo = $c[0];
-    echo "Saldo anda : ".$saldo;
+    echo "Saldo anda : ".$saldo."\n";
 } else {
-    echo "Gagal menjalankan curl !";
+    echo "Gagal menjalankan curl !\n";
 }
 function curl($url, $opz=null)
 {
