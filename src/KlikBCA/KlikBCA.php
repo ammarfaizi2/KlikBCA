@@ -79,7 +79,7 @@ final class KlikBCA
 		return null;
 	}
 
-	public function mutasi($start = 1, $end = 1)
+	public function mutasi()
 	{
 		$data = [
 			"r1" => 1,
@@ -93,7 +93,7 @@ final class KlikBCA
 			"value(endYr)"	 => 2017
 		];
 		$data = http_build_query($data);
-		false and $a = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=acctstmtview", 
+		$a = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=acctstmtview", 
 			[
 					CURLOPT_POST	   => true,
 					CURLOPT_POSTFIELDS => $data,
@@ -107,8 +107,6 @@ final class KlikBCA
 					]
 				]
 		);
-
-		$a = file_get_contents("c.tmp");
 		$a = explode("<td bgcolor=\"#e0e0e0\" colspan=\"2\"><b>KETERANGAN</td>", $a, 2);
 		if (isset($a[1])) {
 			$a = explode("</table>", $a[1], 2);
@@ -127,15 +125,15 @@ final class KlikBCA
 							});
 							$results[] = [
 								"tanggal" 				=> $b[0],
-								"informasi_transaksi"	=> implode("\n", $c[1])
+								"informasi_transaksi"	=> $c[1]
 							];
 						}
 					}
 				}
 			}
+			return $results ? $results : false;
 		}
-		var_dump($results);
-		die;
+		return false;
 	}
 
 	/**

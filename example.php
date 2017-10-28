@@ -8,4 +8,4 @@ $cred = json_decode(file_get_contents("a.tmp"), true);
 
 $st = new KlikBCA($cred['user'], $cred['pass']);
 // $st->login();
-$st->mutasi();
+print_r(json_encode($st->mutasi(), 128 | JSON_UNESCAPED_SLASHES));
