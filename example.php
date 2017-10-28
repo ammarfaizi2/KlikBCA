@@ -7,4 +7,4 @@ $cred = json_decode(file_get_contents("a.tmp"), true);
 
 
 $st = new KlikBCA($cred['user'], $cred['pass']);
-print $st->login();
+print_r($st->login());
