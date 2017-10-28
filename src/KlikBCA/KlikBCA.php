@@ -38,7 +38,7 @@ final class KlikBCA
 	 */
 	public function login()
 	{
-
+		return $this->exec("https://m.klikbca.com/login.jsp");
 	}
 
 	/**
@@ -73,7 +73,7 @@ final class KlikBCA
 	 * @param string $url
 	 * @param array  $opt
 	 */
-	private static function exec($url, $opt = null)
+	private function exec($url, $opt = null)
 	{
 		$ch = curl_init($url);
 		$this->compactXorCurlOpt($opt);
