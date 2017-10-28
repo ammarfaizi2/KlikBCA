@@ -1,0 +1,14 @@
+{
+    "name": "ammarfaizi2/klikbca",
+    "description": "KlikBCA",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ammar Faizi",
+            "email": "ammarfaizi2@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
