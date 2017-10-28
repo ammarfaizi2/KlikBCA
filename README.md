@@ -1,12 +1,26 @@
 # KlikBCA
 
 ## Cara pakai :
-1. Edit cek_saldo.php
-2. Ubah dengan username dan password klikbca anda.
-```php
-$_p['value(user_id)'] = "username"; // username
-$_p['value(pswd)'] = "password anda"; // password
-```
-3. Jalankan cek_saldo.php via CLI atau browser.
+1. Buka example.php
+2. Sesuaikan username dan password.
+3. Jalankan example.php
 
-![qwer](https://user-images.githubusercontent.com/26004054/27005321-815d9a90-4e46-11e7-85dc-c7713a3f17c7.png)
+```
+<?php
+// require "vendor/autoload.php"; // jika pakai composer
+
+require "src/KlikBCA/KlikBCA.php";
+
+use KlikBCA\KlikBCA;
+
+$cred = [
+	"user" => "username",
+	"pass" => "password"
+];
+
+$st = new KlikBCA($cred['user'], $cred['pass']);
+
+$st->login();
+$mutasi = $st->mutasi();
+
+print_r(json_encode($mutasi, 128 | JSON_UNESCAPED_SLASHES));```
