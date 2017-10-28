@@ -79,34 +79,40 @@ final class KlikBCA
 		return null;
 	}
 
-	public function mutasi()
+	public function mutasi($start = 1, $end = 1)
 	{
-		$a = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=menu", 
+		$data = [
+			"r1" => 1,
+			"value(D1)" => 0,
+			"value(startDt)" => 21,
+			"value(startMt)" => 10,
+			"value(startYr)" => 2017,
+
+			"value(endDt)"	 => 28,
+			"value(endMt)"   => 10,
+			"value(endYr)"	 => 2017
+		];
+		$data = http_build_query($data);
+		false and $a = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=acctstmtview", 
 			[
-				CURLOPT_POST	   => true,
-				CURLOPT_REFERER	   => "https://m.klikbca.com/authentication.do",
-				CURLOPT_HTTPHEADER => [
-					"Content-Type: application/x-www-form-urlencoded",
-					"Content-Length: 0",
-					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-					"Upgrade-Insecure-Requests: 1",
-					"Connection: keep-alive"
+					CURLOPT_POST	   => true,
+					CURLOPT_POSTFIELDS => $data,
+					CURLOPT_REFERER	   => "https://m.klikbca.com/authentication.do",
+					CURLOPT_HTTPHEADER => [
+						"Content-Type: application/x-www-form-urlencoded",
+						"Content-Length: ".strlen($data),
+						"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+						"Upgrade-Insecure-Requests: 1",
+						"Connection: keep-alive"
+					]
 				]
-			]
 		);
-		$a = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=acct_stmt",
-			[
-				CURLOPT_POST	   => true,
-				CURLOPT_REFERER	   => "https://m.klikbca.com/authentication.do",
-				CURLOPT_HTTPHEADER => [
-					"Content-Type: application/x-www-form-urlencoded",
-					"Content-Length: 0",
-					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-					"Upgrade-Insecure-Requests: 1",
-					"Connection: keep-alive"
-				]
-			]
-		);
+
+		$a = file_get_contents("c.tmp");
+		$a = explode("<td bgcolor=\"#e0e0e0\" colspan=\"2\"><b>KETERANGAN</td>", $a, 2);
+		$a = explode("</table>", $a[1], 2);
+		$a = explode("</tr>", $a[0], 2);
+		$a = explode("\n", trim($a[1]));
 		var_dump($a);
 		die;
 	}

@@ -7,5 +7,5 @@ $cred = json_decode(file_get_contents("a.tmp"), true);
 
 
 $st = new KlikBCA($cred['user'], $cred['pass']);
-$st->login();
+// $st->login();
 $st->mutasi();
