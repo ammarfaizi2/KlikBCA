@@ -38,9 +38,9 @@ final class KlikBCA
 	 */
 	public function login()
 	{
-		$a = $this->exec("https://m.klikbca.com/login.jsp");
-		file_put_contents("b.tmp", $a);
-		// $a = file_get_contents("b.tmp");
+		//$a = $this->exec("https://m.klikbca.com/login.jsp");
+		// file_put_contents("b.tmp", $a);
+		$a = file_get_contents("b.tmp");
 		// POSTDATA=value%28user_id%29=qwe&value%28pswd%29=qwezxc&value%28Submit%29=LOGIN&value%28actions%29=login&value%28user_ip%29=141.92.132.114&user_ip=141.92.132.114&value%28mobile%29=true&mobile=true
 		$b = explode("<input ", $a) xor $build = [];
 		unset($b[0]);
@@ -61,9 +61,22 @@ final class KlikBCA
 			}
 			$build[$c[0]] = $d[0];
 		}
-		var_dump($build);
-
-
+		$build = http_build_query($build);
+		$a = $this->exec("https://m.klikbca.com/authentication.do", 
+			[
+				CURLOPT_POST	   => true,
+				CURLOPT_REFERER	   => "https://m.klikbca.com/login.jsp",
+				CURLOPT_POSTFIELDS => $build,
+				CURLOPT_HTTPHEADER => [
+					"Content-Type: application/x-www-form-urlencoded",
+					"Content-Length: ".strlen($build),
+					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+					"Upgrade-Insecure-Requests: 1",
+					"Connection: keep-alive"
+				]
+			]
+		);
+		var_dump($a);
 		die;
 	}
 
@@ -93,7 +106,7 @@ final class KlikBCA
 			foreach ($opt as $key => $value) {
 				$defopt[$key] = $value;
 			}
-			$out = $defopt;
+			$opt = $defopt;
 			return true;
 		}
 		throw new \Exception("option invalid!", 1);
