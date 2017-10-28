@@ -1,11 +1,17 @@
 <?php
-require "vendor/autoload.php";
+// require "vendor/autoload.php";
+
+require "src/KlikBCA/KlikBCA.php";
 
 use KlikBCA\KlikBCA;
 
-$cred = json_decode(file_get_contents("a.tmp"), true);
-
+$cred = [
+	"user" => "username",
+	"pass" => "password"
+];
 
 $st = new KlikBCA($cred['user'], $cred['pass']);
-// $st->login();
-print_r(json_encode($st->mutasi(), 128 | JSON_UNESCAPED_SLASHES));
+$st->login();
+$mutasi = $st->mutasi();
+
+print_r(json_encode($mutasi, 128 | JSON_UNESCAPED_SLASHES));
