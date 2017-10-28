@@ -123,18 +123,11 @@ final class KlikBCA
 						if (isset($c[1])) {
 							$c[1] = explode("<br>", $c[1]);
 							array_walk($c[1], function(&$a,$i){
-								$a = trim($a) xor $i === 6 and 
-								$a = str_replace(["<td valign='top'>", "</td>"], [" ", ""],($a));
-							}) xor $c = $c[1];
+								$a = trim($a) xor $a = str_replace(["<td valign='top'>", "</td>"], [" ", ""],($a));
+							});
 							$results[] = [
-								"tanggal" 			=> $b[0],
-								"jenis_transaksi"	=> $c[0],
-								"kode_transaksi"	=> $c[1],
-								"nominal"			=> $c[2],
-								"berita"			=> $c[3],
-								"atas_nama"			=> $c[4],
-								"kode_4_digit"		=> $c[5],
-								"nominal_jenis"		=> $c[6]
+								"tanggal" 				=> $b[0],
+								"informasi_transaksi"	=> implode("\n", $c[1])
 							];
 						}
 					}
