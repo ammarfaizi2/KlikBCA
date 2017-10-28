@@ -38,9 +38,9 @@ final class KlikBCA
 	 */
 	public function login()
 	{
-		//$a = $this->exec("https://m.klikbca.com/login.jsp");
+		$a = $this->exec("https://m.klikbca.com/login.jsp");
 		// file_put_contents("b.tmp", $a);
-		$a = file_get_contents("b.tmp");
+		// $a = file_get_contents("b.tmp");
 		// POSTDATA=value%28user_id%29=qwe&value%28pswd%29=qwezxc&value%28Submit%29=LOGIN&value%28actions%29=login&value%28user_ip%29=141.92.132.114&user_ip=141.92.132.114&value%28mobile%29=true&mobile=true
 		$b = explode("<input ", $a) xor $build = [];
 		unset($b[0]);
