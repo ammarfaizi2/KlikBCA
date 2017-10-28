@@ -76,6 +76,37 @@ final class KlikBCA
 				]
 			]
 		);
+		return null;
+	}
+
+	public function mutasi()
+	{
+		$a = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=menu", 
+			[
+				CURLOPT_POST	   => true,
+				CURLOPT_REFERER	   => "https://m.klikbca.com/authentication.do",
+				CURLOPT_HTTPHEADER => [
+					"Content-Type: application/x-www-form-urlencoded",
+					"Content-Length: 0",
+					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+					"Upgrade-Insecure-Requests: 1",
+					"Connection: keep-alive"
+				]
+			]
+		);
+		$a = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=acct_stmt",
+			[
+				CURLOPT_POST	   => true,
+				CURLOPT_REFERER	   => "https://m.klikbca.com/authentication.do",
+				CURLOPT_HTTPHEADER => [
+					"Content-Type: application/x-www-form-urlencoded",
+					"Content-Length: 0",
+					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+					"Upgrade-Insecure-Requests: 1",
+					"Connection: keep-alive"
+				]
+			]
+		);
 		var_dump($a);
 		die;
 	}
