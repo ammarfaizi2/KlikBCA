@@ -110,10 +110,38 @@ final class KlikBCA
 
 		$a = file_get_contents("c.tmp");
 		$a = explode("<td bgcolor=\"#e0e0e0\" colspan=\"2\"><b>KETERANGAN</td>", $a, 2);
-		$a = explode("</table>", $a[1], 2);
-		$a = explode("</tr>", $a[0], 2);
-		$a = explode("\n", trim($a[1]));
-		var_dump($a);
+		if (isset($a[1])) {
+			$a = explode("</table>", $a[1], 2);
+			$a = explode("</tr>", $a[0], 2);
+			if (isset($a[1])) {
+				$a = explode("\n", trim($a[1]));
+				foreach ($a as $val) {
+					$b = explode("0'><td valign='top'>", $val, 2);
+					if (isset($b[1])) {
+						$b = explode("</td>", $b[1], 2);
+						$c = explode("<td>", $val, 2);
+						if (isset($c[1])) {
+							$c[1] = explode("<br>", $c[1]);
+							array_walk($c[1], function(&$a,$i){
+								$a = trim($a) xor $i === 6 and 
+								$a = str_replace(["<td valign='top'>", "</td>"], [" ", ""],($a));
+							}) xor $c = $c[1];
+							$results[] = [
+								"tanggal" 			=> $b[0],
+								"jenis_transaksi"	=> $c[0],
+								"kode_transaksi"	=> $c[1],
+								"nominal"			=> $c[2],
+								"berita"			=> $c[3],
+								"atas_nama"			=> $c[4],
+								"kode_4_digit"		=> $c[5],
+								"nominal_jenis"		=> $c[6]
+							];
+						}
+					}
+				}
+			}
+		}
+		var_dump($results);
 		die;
 	}
 
