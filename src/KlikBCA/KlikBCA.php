@@ -47,8 +47,7 @@ final class KlikBCA
 	public function login()
 	{
 		$s = $this->exec("https://m.klikbca.com/login.jsp");
-		file_put_contents("a.tmp", $s["out"]);
-		$s = file_get_contents("a.tmp");
+		$s = $s["out"];
 		if (preg_match_all("/<input.+>/Us", $s, $m)) {
 			$posts["value(user_id)"] = $this->username;
 			$posts["value(pswd)"] = $this->password;
@@ -71,14 +70,81 @@ final class KlikBCA
 		}
 	}
 
+	/**
+	 * @return array
+	 */
+	public function accountStatement($startDate, $endDate = null)
+	{
+
+		$s = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=acct_stmt",
+				[
+					CURLOPT_POST => true
+				]
+			);
+		$s = $s["out"];
+		
+		// file_put_contents("c.tmp", $s);die;
+		// $s = file_get_contents("aaaa.tmp");
+		
+		preg_match("/<input type=\"hidden\" name=\"as_fid\" value=\"(.*)\"/Us", $s, $m);
+		$st = strtotime($startDate);
+		$ed = $endDate ? strtotime($endDate) : $st;
+		$posts = [
+			"r1" => "1",
+			"value(D1)" => "0",
+			"value(startDt)" => date("d", $st),
+			"value(startMt)" => date("m", $st),
+			"value(startYr)" => date("Y", $st),
+			"value(endDt)" => date("d", $ed),
+			"value(endMt)" => date("m", $ed),
+			"value(endYr)" => date("Y", $ed)
+		];
+
+		if (isset($m[1])) {
+			$posts["as_fid"] = $m[1];
+		}
+
+		$s = $this->exec("https://m.klikbca.com/accountstmt.do?value(actions)=acctstmtview",
+				[
+					CURLOPT_POST => true,
+					CURLOPT_POSTFIELDS => http_build_query($posts)	
+				]
+			);
+		$s = $s["out"];
+
+		// file_put_contents("b.tmp", $s["out"]);
+		// $s = file_get_contents("b.tmp");
+
+		$data = [];
+		if (preg_match("/<table width=\"100%\" class=\"blue\">(.*)<\/table>/Us", $s, $m)) {
+			preg_match_all("/<tr bgcolor='#.{6}'><td valign='top'>(.*)<\/td><td>(.*)<\/td>/Us", $m[1], $m);
+			foreach ($m[2] as $v) {
+				$v = explode("<br>", $v);
+				$c = explode("<td valign='top'>", $v[$cc = count($v) - 1], 2);
+				unset($v[$cc]);
+				$data[] = [
+					"type" => $c[1],
+					"amount" => $c[0],
+					"info" => implode(array_map(function($v){
+						return trim(html_entity_decode($v, ENT_QUOTES, "UTF-8"));
+					}, $v)," ")
+				];
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * @return array
+	 */
 	public function balanceInquiry()
 	{
-		// $s = $this->exec("https://m.klikbca.com/balanceinquiry.do",
-		// 		[
-		// 			CURLOPT_POST => true
-		// 		]
-		// 	);
-		$s = file_get_contents("aaa.tmp");
+		$s = $this->exec("https://m.klikbca.com/balanceinquiry.do",
+				[
+					CURLOPT_POST => true
+				]
+			);
+		$s = $s["out"];
 		preg_match("/<td><font size='1' color='#0000a7'><b>(.*)<\/td>/Us", $s, $m);
 		$accountNum = $m[1];
 		preg_match("/<td width='5%'><font size='1' color='#0000a7'><b>(.*)<\/td>/U", $s, $m);
