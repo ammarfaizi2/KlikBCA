@@ -14,8 +14,8 @@
         "php": ">=5.6.4"
     },
     "autoload": {
-        "psr-0": {
-            "KlikBCA": "src/"
+        "psr-4": {
+            "KlikBCA\\": "src/KlikBCA/"
         }
     }
 }
