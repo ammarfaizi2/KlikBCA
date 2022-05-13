@@ -1,4 +1,5 @@
 <?php
+// SPDX-License-Identifier: GPL-2.0-only
 
 require __DIR__."/src/KlikBCA/KlikBCA.php";
 

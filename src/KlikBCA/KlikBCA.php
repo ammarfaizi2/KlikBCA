@@ -1,4 +1,5 @@
 <?php
+// SPDX-License-Identifier: GPL-2.0-only
 
 namespace KlikBCA;
 
@@ -6,7 +7,7 @@ use Exception;
 
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com>
- * @license MIT
+ * @license GPL-2.0-only
  * @version 2.0.1
  * @package KlikBCA
  */
