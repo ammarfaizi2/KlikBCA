@@ -6,7 +6,7 @@ namespace KlikBCA;
 use Exception;
 
 /**
- * @author Ammar Faizi <ammarfaizi2@gmail.com>
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> # https://www.facebook.com/ammarfaizi2
  * @license GPL-2.0-only
  * @version 2.0.1
  * @package KlikBCA
