@@ -231,10 +231,15 @@ final class KlikBCA
 	}
 
 	/**
-	 * @return array
+	 * @return ?array
 	 */
 	public function accountStatement($startDate, $endDate = null)
 	{
+		if (!$this->sessActive) {
+			if (!$this->login())
+				return NULL;
+		}
+
 		$err = "";
 		$o = $this->curl("https://m.klikbca.com/accountstmt.do?value(actions)=acct_stmt", [
 			CURLOPT_POST       => true,
