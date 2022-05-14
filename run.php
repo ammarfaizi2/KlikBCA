@@ -10,6 +10,11 @@ require __DIR__."/credentials.tmp";
 
 define("COOKIE_FILE", __DIR__."/cookie.tmp");
 
+/*
+ * Uncomment this define() to use proxy.
+ */
+// define("PROXY", "socks5://139.180.140.164:1080");
+
 /**
  * Show the account balance information.
  *
@@ -20,6 +25,13 @@ define("COOKIE_FILE", __DIR__."/cookie.tmp");
 function show_balance($username, $password)
 {
 	$bca = new KlikBCA\KlikBCA($username, $password, COOKIE_FILE);
+
+	/*
+	 * Use proxy if the PROXY constant is defined.
+	 */
+	if (defined("PROXY"))
+		$bca->setProxy(PROXY);
+
 	$ret = $bca->login();
 	if (!$ret)
 		goto err;
@@ -49,6 +61,13 @@ show_balance($username, $password);
 function show_account_statements($username, $password, $startDate, $endDate)
 {
 	$bca = new KlikBCA\KlikBCA($username, $password, COOKIE_FILE);
+
+	/*
+	 * Use proxy if the PROXY constant is defined.
+	 */
+	if (defined("PROXY"))
+		$bca->setProxy(PROXY);
+
 	$ret = $bca->login();
 	if (!$ret)
 		goto err;
