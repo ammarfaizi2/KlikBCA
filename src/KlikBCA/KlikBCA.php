@@ -355,10 +355,7 @@ final class KlikBCA
 	 */
 	public function setProxy($proxy = NULL)
 	{
-		if (is_string($proxy))
-			$this->proxy = $proxy;
-		else
-			$this->proxy = NULL;
+		$this->proxy = $proxy;
 	}
 
 	/**
