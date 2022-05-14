@@ -103,7 +103,7 @@ final class KlikBCA
 			CURLOPT_POSTFIELDS => ""
 		]);
 		if (self::isCurlErr($o)) {
-			$err = self::buildCurlErr($o);
+			$this->err = self::buildCurlErr($o);
 			return false;
 		}
 
