@@ -44,6 +44,11 @@ final class KlikBCA
 	private $sessActive = false;
 
 	/**
+	 * @var ?string
+	 */
+	private $proxy = NULL;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $username
@@ -342,6 +347,21 @@ final class KlikBCA
 	}
 
 	/**
+	 * A method to set proxy for the cURL request. To unset the proxy,
+	 * call this function with no argument or a NULL argument.
+	 *
+	 * @param string $proxy
+	 * @return ?string
+	 */
+	public function setProxy($proxy = NULL)
+	{
+		if (is_string($proxy))
+			$this->proxy = $proxy;
+		else
+			$this->proxy = NULL;
+	}
+
+	/**
 	 * @param string $url
 	 * @param array  $opt
 	 * @return array
@@ -355,6 +375,9 @@ final class KlikBCA
 			CURLOPT_COOKIEJAR	=> $this->cookieFile,
 			CURLOPT_COOKIEFILE	=> $this->cookieFile
 		];
+
+		if (is_string($this->proxy))
+			$optDef[CURLOPT_PROXY] = $this->proxy;
 
 		foreach ($opt as $k => $v)
 			$optDef[$k] = $v;
