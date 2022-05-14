@@ -14,6 +14,11 @@ This is the KlikBCA scraper library written in PHP by Ammar Faizi.
 require __DIR__."/src/KlikBCA/KlikBCA.php";
 define("COOKIE_FILE", __DIR__."/cookie.tmp");
 
+/*
+ * Uncomment this define() to use proxy.
+ */
+// define("PROXY", "socks5://139.180.140.164:1080");
+
 $username = "your_klikbca_username";
 $password = "your_klikbca_password";
 
@@ -27,6 +32,13 @@ $password = "your_klikbca_password";
 function show_balance($username, $password)
 {
 	$bca = new KlikBCA\KlikBCA($username, $password, COOKIE_FILE);
+
+	/*
+	 * Use proxy if the PROXY constant is defined.
+	 */
+	if (defined("PROXY"))
+		$bca->setProxy(PROXY);
+
 	$ret = $bca->login();
 	if (!$ret)
 		goto err;
@@ -53,6 +65,11 @@ show_balance($username, $password);
 require __DIR__."/src/KlikBCA/KlikBCA.php";
 define("COOKIE_FILE", __DIR__."/cookie.tmp");
 
+/*
+ * Uncomment this define() to use proxy.
+ */
+// define("PROXY", "socks5://139.180.140.164:1080");
+
 $username = "your_klikbca_username";
 $password = "your_klikbca_password";
 
@@ -68,6 +85,13 @@ $password = "your_klikbca_password";
 function show_account_statements($username, $password, $startDate, $endDate)
 {
 	$bca = new KlikBCA\KlikBCA($username, $password, COOKIE_FILE);
+
+	/*
+	 * Use proxy if the PROXY constant is defined.
+	 */
+	if (defined("PROXY"))
+		$bca->setProxy(PROXY);
+
 	$ret = $bca->login();
 	if (!$ret)
 		goto err;
