@@ -351,7 +351,7 @@ final class KlikBCA
 	 * call this function with no argument or a NULL argument.
 	 *
 	 * @param string $proxy
-	 * @return ?string
+	 * @return void
 	 */
 	public function setProxy($proxy = NULL)
 	{
