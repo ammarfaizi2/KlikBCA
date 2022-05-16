@@ -49,6 +49,11 @@ final class KlikBCA
 	private $proxy = NULL;
 
 	/**
+	 * @var bool
+	 */
+	private $reuseSession = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $username
@@ -87,10 +92,28 @@ final class KlikBCA
 	 */
 	public function __destruct()
 	{
+		if ($this->reuseSession)
+			/*
+			 * The user explicitly tells us that they want to
+			 * reuse the existing session.
+			 *
+			 * Do not logout and do not delete the cookie here.
+			 */
+			return;
+
 		if ($this->sessActive)
 			$this->logout();
 
 		@unlink($this->cookieFile);
+	}
+
+	/**
+	 * @param bool $reuse
+	 * @return void
+	 */
+	public function setReuseSession($reuse)
+	{
+		$this->reuseSession = (bool)$reuse;
 	}
 
 	/**
@@ -187,14 +210,42 @@ final class KlikBCA
 	}
 
 	/**
+	 * @return bool
+	 */
+	private function sessionCheck()
+	{
+		/*
+		 * If the user wants to reuse the session, we are not
+		 * responsible to check the value of $this->sessActive.
+		 *
+		 * The user is responsible to guarantee the session
+		 * is still active, otherwise they will fail to
+		 * execute some methods.
+		 */
+		if ($this->reuseSession)
+			return true;
+
+		/*
+		 * The user doesn't care with reusing session, so we
+		 * must take care of their session here. If they
+		 * haven't been logged in, let's make them be.
+		 */
+		if (!$this->sessActive)
+			return $this->login();
+
+		/*
+		 * We are holding an active session here, let's go!
+		 */
+		return true;
+	}
+
+	/**
 	 * @return ?array
 	 */
 	public function balanceInquiry()
 	{
-		if (!$this->sessActive) {
-			if (!$this->login())
-				return NULL;
-		}
+		if (!$this->sessionCheck())
+			return NULL;
 
 		$o = $this->curl("https://m.klikbca.com/balanceinquiry.do", [
 			CURLOPT_POST       => true,
@@ -240,10 +291,8 @@ final class KlikBCA
 	 */
 	public function accountStatement($startDate, $endDate = null)
 	{
-		if (!$this->sessActive) {
-			if (!$this->login())
-				return NULL;
-		}
+		if (!$this->sessionCheck())
+			return NULL;
 
 		$err = "";
 		$o = $this->curl("https://m.klikbca.com/accountstmt.do?value(actions)=acct_stmt", [
