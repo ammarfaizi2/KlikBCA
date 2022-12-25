@@ -364,12 +364,12 @@ final class KlikBCA
 
 
 		if (!preg_match("/<table width=\"100%\" class=\"blue\">(.*)<\/table>/Us", $o, $m)) {
-			$err = "Cannot find table on the account statement page";
+			$err = "Cannot find the table on the account statement page";
 			goto out_err;
 		}
 
 		if (!preg_match_all("/<tr bgcolor='#.{6}'><td valign='top'>(.*)<\/td><td>(.*)<\/td>/Us", $m[1], $m)) {
-			$err = "Cannot parse table on the account statement page";
+			$err = "Cannot parse the table on the account statement page";
 			goto out_err;
 		}
 
