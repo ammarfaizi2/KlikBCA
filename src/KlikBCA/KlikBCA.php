@@ -19,6 +19,11 @@ final class KlikBCA
 	private const USER_AGENT = "Opera/9.80 (J2ME/MIDP; Opera Mini/4.2.14912/35.5706; U; id) Presto/2.8.119 Version/11.10";
 
 	/**
+	 * @const string
+	 */
+	private const LOCKED_UP_PATTERN = "/'(Anda dapat melakukan login kembali setelah 5 menit.+?)'/";
+
+	/**
 	 * @var string
 	 */
 	private $username;
@@ -251,10 +256,7 @@ final class KlikBCA
 		return true;
 
 	out_err:
-		if (isset($url, $o["out"]) && $o["out"])
-			$this->htmlDumpError($url, $o["out"]);
-
-		$this->setErr($err);
+		$this->setErr($url, $err, $o);
 		return false;
 	}
 
@@ -332,10 +334,7 @@ final class KlikBCA
 		];
 
 	out_err:
-		if (isset($url, $o["out"]) && $o["out"])
-			$this->htmlDumpError($url, $o["out"]);
-
-		$this->setErr($err);
+		$this->setErr($url, $err, $o);
 		return NULL;
 	}
 
@@ -446,10 +445,7 @@ final class KlikBCA
 		return $data;
 
 	out_err:
-		if (isset($url, $o["out"]) && $o["out"])
-			$this->htmlDumpError($url, $o["out"]);
-
-		$this->setErr($err);
+		$this->setErr($url, $err, $o);
 		return NULL;
 	}
 
@@ -501,11 +497,24 @@ final class KlikBCA
 	}
 
 	/**
-	 * @param string $msg
+	 * @param string        $url
+	 * @param string        $msg
+	 * @param array|string  $o
+	 * @return void
 	 */
-	private function setErr($msg)
+	private function setErr($url, $msg, $o)
 	{
-		$this->error = $msg;
+		if (isset($o["out"]))
+			$o = $o["out"];
+
+		$err_extra = "";
+		if (isset($url, $o) && $o) {
+			$this->htmlDumpError($url, $o);
+
+			if (preg_match(self::LOCKED_UP_PATTERN, $o, $m))
+				$err_extra = " (possible locked up: {$m[1]})";
+		}
+		$this->error = $msg.$err_extra;
 	}
 
 	/**
