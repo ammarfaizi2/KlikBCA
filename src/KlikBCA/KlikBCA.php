@@ -54,6 +54,22 @@ final class KlikBCA
 	private $reuseSession = false;
 
 	/**
+	 *
+	 * When an error happens while parsing the HTML page, it's hard to
+	 * conclude what is going wrong. Allow the user to set a dump error
+	 * file to dump the HTML page string into a file for manual
+	 * investigation.
+	 *
+	 * @var ?string
+	 */
+	private $dumpHtmlErrorFile = NULL;
+
+	/**
+	 * @var int
+	 */
+	private $nrDumpHtml = 0;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $username
@@ -117,6 +133,34 @@ final class KlikBCA
 	}
 
 	/**
+	 * @param string $file
+	 * @return void
+	 */
+	public function setDumpHtmlErrorFile($file)
+	{
+		$this->dumpHtmlErrorFile = $file;
+	}
+
+	/**
+	 * @param string $url
+	 * @param string $html
+	 * @return void
+	 */
+	private function htmlDumpError($url, $html)
+	{
+		if (!is_string($this->dumpHtmlErrorFile))
+			return;
+		$html = "==========================\n".
+			"URL: {$url}\n".
+			"Date: ".gmdate("c")."\n".
+			"==========================\n".
+			"{$html}\n".
+			"==========================\n\n";
+		$this->nrDumpHtml++;
+		file_put_contents($this->dumpHtmlErrorFile, $html, FILE_APPEND);
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function logout()
@@ -142,7 +186,8 @@ final class KlikBCA
 		$err = "";
 		$m = [];
 
-		$o = $this->curl("https://m.klikbca.com/login.jsp");
+		$url = "https://m.klikbca.com/login.jsp";
+		$o = $this->curl($url);
 		if (self::isCurlErr($o)) {
 			$err = self::buildCurlErr($o);
 			goto out_err;
@@ -184,7 +229,8 @@ final class KlikBCA
 			$posts[$key] = $val;
 		}
 
-		$o = $this->curl("https://m.klikbca.com/authentication.do", [
+		$url = "https://m.klikbca.com/authentication.do";
+		$o = $this->curl($url, [
 			CURLOPT_POST       => true,
 			CURLOPT_POSTFIELDS => http_build_query($posts)
 		]);
@@ -205,6 +251,9 @@ final class KlikBCA
 		return true;
 
 	out_err:
+		if (isset($url, $o["out"]) && $o["out"])
+			$this->htmlDumpError($url, $o["out"]);
+
 		$this->setErr($err);
 		return false;
 	}
@@ -247,7 +296,8 @@ final class KlikBCA
 		if (!$this->sessionCheck())
 			return NULL;
 
-		$o = $this->curl("https://m.klikbca.com/balanceinquiry.do", [
+		$url = "https://m.klikbca.com/balanceinquiry.do";
+		$o = $this->curl($url, [
 			CURLOPT_POST       => true,
 			CURLOPT_POSTFIELDS => ""
 		]);
@@ -282,6 +332,9 @@ final class KlikBCA
 		];
 
 	out_err:
+		if (isset($url, $o["out"]) && $o["out"])
+			$this->htmlDumpError($url, $o["out"]);
+
 		$this->setErr($err);
 		return NULL;
 	}
@@ -295,7 +348,8 @@ final class KlikBCA
 			return NULL;
 
 		$err = "";
-		$o = $this->curl("https://m.klikbca.com/accountstmt.do?value(actions)=acct_stmt", [
+		$url = "https://m.klikbca.com/accountstmt.do?value(actions)=acct_stmt";
+		$o = $this->curl($url, [
 			CURLOPT_POST       => true,
 			CURLOPT_POSTFIELDS => ""
 		]);
@@ -352,7 +406,8 @@ final class KlikBCA
 			$posts[$key] = $val;
 		}
 
-		$o = $this->curl("https://m.klikbca.com/accountstmt.do?value(actions)=acctstmtview", [
+		$url = "https://m.klikbca.com/accountstmt.do?value(actions)=acctstmtview";
+		$o = $this->curl($url, [
 			CURLOPT_POST => true,
 			CURLOPT_POSTFIELDS => http_build_query($posts)
 		]);
@@ -391,6 +446,9 @@ final class KlikBCA
 		return $data;
 
 	out_err:
+		if (isset($url, $o["out"]) && $o["out"])
+			$this->htmlDumpError($url, $o["out"]);
+
 		$this->setErr($err);
 		return NULL;
 	}
@@ -472,7 +530,8 @@ final class KlikBCA
 		if (!isset($o["ern"], $o["err"]))
 			throw \Exception("Unknown error");
 
-		return sprintf("(%d): %s", (int)$o["ern"], (string)$o["err"]);
+		return sprintf("(%d): %s (nrDumpHtml = %d)", (int)$o["ern"],
+				(string)$o["err"], $this->nrDumpHtml);
 	}
 
 	/**

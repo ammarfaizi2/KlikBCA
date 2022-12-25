@@ -25,6 +25,7 @@ define("COOKIE_FILE", __DIR__."/cookie.tmp");
 function show_balance($username, $password)
 {
 	$bca = new KlikBCA\KlikBCA($username, $password, COOKIE_FILE);
+	$bca->setDumpHtmlErrorFile("error.html.tmp");
 
 	/*
 	 * Use proxy if the PROXY constant is defined.
@@ -61,6 +62,7 @@ show_balance($username, $password);
 function show_account_statements($username, $password, $startDate, $endDate)
 {
 	$bca = new KlikBCA\KlikBCA($username, $password, COOKIE_FILE);
+	$bca->setDumpHtmlErrorFile("error.html.tmp");
 
 	/*
 	 * Use proxy if the PROXY constant is defined.
